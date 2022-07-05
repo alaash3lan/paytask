@@ -16,6 +16,7 @@ type Account struct {
 	Balance float64 `json:"balance,string"`
 }
 
+//retrieve all accounts data
 func GetAccounts(url string) map[string]*Account {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -36,23 +37,27 @@ func GetAccounts(url string) map[string]*Account {
 	return accounts
 }
 
+// get account by id
 func Get(w http.ResponseWriter, r *http.Request) {
 	accounts := r.Context().Value("db").(map[string]*Account)
 	id := mux.Vars(r)["id"]
 	if accounts[id] == nil {
-		json.NewEncoder(w).Encode(tools.Response{
+		tools.Respond(w, tools.Response{
 			Status:  404,
 			Success: false,
 			Error:   "wrong account id",
 			Message: nil,
 		})
+
+	} else {
+		tools.Respond(w, tools.Response{
+			Status:  200,
+			Success: true,
+			Error:   "",
+			Message: accounts[id],
+		})
 	}
-	json.NewEncoder(w).Encode(tools.Response{
-		Status:  200,
-		Success: true,
-		Error:   "",
-		Message: accounts[id],
-	})
+
 }
 
 // get all accounts
@@ -60,8 +65,7 @@ func All(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	accounts := r.Context().Value("db").(map[string]*Account)
-
-	json.NewEncoder(w).Encode(tools.Response{
+	tools.Respond(w, tools.Response{
 		Status:  200,
 		Success: true,
 		Error:   "",
@@ -75,7 +79,7 @@ func TransferHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewDecoder(r.Body).Decode(&transaction)
 	err := transaction.Transfer(r.Context())
 	if err != nil {
-		json.NewEncoder(w).Encode(tools.Response{
+		tools.Respond(w, tools.Response{
 			Status:  400,
 			Success: false,
 			Error:   err.Error(),
@@ -83,7 +87,7 @@ func TransferHandler(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	json.NewEncoder(w).Encode(tools.Response{
+	tools.Respond(w, tools.Response{
 		Status:  200,
 		Success: true,
 		Error:   "",
