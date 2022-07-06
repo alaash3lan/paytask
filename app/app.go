@@ -35,7 +35,7 @@ func (a *App) initializeRoutes() {
 
 }
 
-//Add app  to the contexts
+//Add DB  to the contexts
 func (a *App) withDB(handler http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		handler.ServeHTTP(w, r.WithContext(context.WithValue(r.Context(), "DB", a.DB)))
