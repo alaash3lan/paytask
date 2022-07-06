@@ -39,7 +39,7 @@ func GetAccounts(url string) map[string]*Account {
 
 // get account by id
 func Get(w http.ResponseWriter, r *http.Request) {
-	accounts := r.Context().Value("db").(map[string]*Account)
+	accounts := r.Context().Value("DB").(map[string]*Account)
 	id := mux.Vars(r)["id"]
 	if accounts[id] == nil {
 		tools.Respond(w, tools.Response{
@@ -62,9 +62,7 @@ func Get(w http.ResponseWriter, r *http.Request) {
 
 // get all accounts
 func All(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-
-	accounts := r.Context().Value("db").(map[string]*Account)
+	accounts := r.Context().Value("DB").(map[string]*Account)
 	tools.Respond(w, tools.Response{
 		Status:  200,
 		Success: true,

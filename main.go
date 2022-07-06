@@ -11,5 +11,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-	app.Start()
+	app := app.App{}
+	app.Initialize()
+	app.Run(":8000")
+
 }

@@ -13,7 +13,7 @@ type Transaction struct {
 
 //transfer
 func (t *Transaction) Transfer(c context.Context) error {
-	accounts := c.Value("db").(map[string]*Account)
+	accounts := c.Value("DB").(map[string]*Account)
 	if t.Amount == 0 {
 		return errors.New("cannot transfer 0 balance")
 	}
